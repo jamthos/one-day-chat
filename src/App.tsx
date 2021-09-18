@@ -100,13 +100,13 @@ const Header = styled.header`
 const ChatWindow = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(1fr, 12);
+  grid-template-columns: repeat(12, 1fr);
   background-color: #f4f5fb;
   min-height: 400px;
 `;
 
 const ChatSidebar = styled.div`
-  grid-column: 1 / 4;
+  grid-column: 1 / 5;
   display: flex;
   flex-direction: column;
 
@@ -143,7 +143,7 @@ const ChatSidebar = styled.div`
 `;
 
 const ChatMessages = styled.div`
-  grid-column: 4 / 13;
+  grid-column: 5 / 13;
   border-left: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
