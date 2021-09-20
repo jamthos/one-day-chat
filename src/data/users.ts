@@ -1,2 +1,2 @@
-const users = ["Joyce", "Sam", "Russell"];
+const users = ["Joyse", "Sam", "Russell"];
 export default users
