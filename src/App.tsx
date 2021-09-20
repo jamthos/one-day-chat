@@ -1,12 +1,17 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import breakpoints from "./styles/breakpoints";
+import users from "./data/users";
+import channels from "./data/channels";
 
 interface MessageBlockProps {
   readonly isMine?: boolean;
 }
 
 function App() {
+  const [channel, setChannel] = useState({ id: channels[0].channelId, name: channels[0].channelName });
+  const [userId, setUserId] = useState(users[0]);
+
   return (
     <Wrapper>
       <Header>
@@ -16,26 +21,29 @@ function App() {
       <ChatWindow>
         <ChatSidebar>
           <h2>1. Choose your user:</h2>
-          <select name="userId" id="userId">
-            <option value="Joyce">Joyce</option>
-            <option value="Russell">Russell</option>
-            <option value="Sam">Sam</option>
+          <select name="userId" id="userId" onChange={(e) => setUserId(e.target.value)}>
+            {users.map((user) => (
+              <option value={user} selected={userId === user}>
+                {user}
+              </option>
+            ))}
           </select>
           <h2>2. Choose your channel:</h2>
           <ul>
-            <li>
-              <button className="active">General Channel</button>
-            </li>
-            <li>
-              <button>Technology Channel</button>
-            </li>
-            <li>
-              <button>LGTM Channel</button>
-            </li>
+            {channels.map((_channel) => (
+              <li>
+                <button
+                  className={_channel.channelId === channel.id ? "active" : ""}
+                  onClick={() => setChannel({ id: _channel.channelId, name: _channel.channelName })}
+                >
+                  {_channel.channelName}
+                </button>
+              </li>
+            ))}
           </ul>
         </ChatSidebar>
         <ChatMessages>
-          <MessagesHeader>General Channel</MessagesHeader>
+          <MessagesHeader>{channel.name}</MessagesHeader>
 
           <MessageBlock>
             <MessageAvatar>
