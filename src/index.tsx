@@ -4,9 +4,18 @@ import App from "./App";
 import "./reset.css";
 import reportWebVitals from "./reportWebVitals";
 
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "https://angular-test-backend-yc4c5cvnnq-an.a.run.app/graphql",
+  cache: new InMemoryCache(),
+});
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
