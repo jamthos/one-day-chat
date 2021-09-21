@@ -32,7 +32,7 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
 
   return (
     <div>
-      <div>
+      <MoreButtonWrapper>
         <MoreButton
           onClick={() => {
             let oldMessageId =
@@ -53,10 +53,12 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
         >
           Load Older Messages
         </MoreButton>{" "}
-        {moreCount.current}
+        <p>
+          <strong>{moreCount.current}</strong> older messages loaded
+        </p>
         {moreMsgQuery.loading && " Loading..."}
         {moreMsgQuery.error && "message: " + moreMsgQuery.error}
-      </div>
+      </MoreButtonWrapper>
       <div>
         {moreMsgQuery.data &&
           showOld[channelId] === true &&
@@ -68,8 +70,17 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
   );
 }
 
+const MoreButtonWrapper = styled.div`
+  margin: 1rem 1rem 0;
+
+  p {
+    padding-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #aaa;
+  }
+`;
+
 const MoreButton = styled.button`
-  margin: 1rem;
   padding: 0.5rem 1rem;
   color: #fff;
   font-weight: bold;
