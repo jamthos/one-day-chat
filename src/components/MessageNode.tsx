@@ -27,7 +27,10 @@ export default function MessageNode({ data, userId }: MessageNodeProps) {
       <MessageBody>
         <pre>{data.text}</pre>
       </MessageBody>
-      <MessageTimestamp>{msgDate.toTimeString().substring(0, 5)}</MessageTimestamp>
+      <MessageTimestamp>
+        {msgDate.toTimeString().substring(0, 5)}
+        <span>{userId === data.userId ? "Sent" : ""}</span>
+      </MessageTimestamp>
     </MessageBlock>
   );
 }
@@ -58,6 +61,10 @@ const MessageBody = styled.div`
 const MessageTimestamp = styled.div`
   align-self: center;
   font-size: 0.75rem;
+  span {
+    padding-left: 0.25rem;
+    color: #aaa;
+  }
 `;
 
 const MessageBlock = styled.div<MessageBlockProps>`
