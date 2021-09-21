@@ -8,7 +8,39 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
   uri: "https://angular-test-backend-yc4c5cvnnq-an.a.run.app/graphql",
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          fetchLatestMessages: {
+            keyArgs: ["channelId"],
+            merge(existing = [], incoming) {
+              if (!Array.isArray(incoming)) incoming = [incoming];
+              let n = 0;
+
+              for (let i = 0; i < incoming.length; i++) {
+                if (existing && incoming[i].messageId === existing[0]?.messageId) {
+                  break;
+                }
+                n++;
+              }
+
+              return [...incoming.slice(0, n), ...existing];
+            },
+          },
+          fetchMoreMessages: {
+            keyArgs: ["channelId"],
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
+        },
+      },
+      // Message: {
+      //   keyFields: ["messageId"],
+      // },
+    },
+  }),
 });
 
 ReactDOM.render(
