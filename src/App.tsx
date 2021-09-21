@@ -106,7 +106,10 @@ const ChatWindow = styled.div`
 `;
 
 const ChatSidebar = styled.div`
-  grid-column: 1 / 5;
+  grid-column: 1 / 13;
+  ${breakpoints.from.sm} {
+    grid-column: 1 / 5;
+  }
   display: flex;
   flex-direction: column;
 
@@ -143,12 +146,13 @@ const ChatSidebar = styled.div`
 `;
 
 const ChatMessagesWrapper = styled.div`
-  grid-column: 5 / 13;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  grid-column: 1 / 13;
+  ${breakpoints.from.sm} {
+    grid-column: 5 / 13;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+  }
 `;
 const ChatMessages = styled.div`
-  height: 650px;
-  overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
 `;
