@@ -3,14 +3,23 @@ import styled from "styled-components";
 import breakpoints from "./styles/breakpoints";
 import users from "./data/users";
 import channels from "./data/channels";
+import Messages from "./components/Messages";
 
-interface MessageBlockProps {
-  readonly isMine?: boolean;
+interface OldState {
+  [index: string]: boolean;
 }
 
 function App() {
   const [channel, setChannel] = useState({ id: channels[0].channelId, name: channels[0].channelName });
   const [userId, setUserId] = useState(users[0]);
+  const [isOldLoaded, setIsOldLoaded] = useState(() => {
+    let oldState: OldState = {};
+    channels.map((channel) => {
+      oldState[channel.channelId] = false;
+      return null;
+    });
+    return oldState;
+  });
 
   return (
     <Wrapper>
@@ -21,9 +30,9 @@ function App() {
       <ChatWindow>
         <ChatSidebar>
           <h2>1. Choose your user:</h2>
-          <select name="userId" id="userId" onChange={(e) => setUserId(e.target.value)}>
+          <select name="userId" id="userId" value={userId} onChange={(e) => setUserId(e.target.value)}>
             {users.map((user) => (
-              <option value={user} selected={userId === user}>
+              <option value={user} key={user}>
                 {user}
               </option>
             ))}
@@ -31,10 +40,12 @@ function App() {
           <h2>2. Choose your channel:</h2>
           <ul>
             {channels.map((_channel) => (
-              <li>
+              <li key={_channel.channelName}>
                 <button
                   className={_channel.channelId === channel.id ? "active" : ""}
-                  onClick={() => setChannel({ id: _channel.channelId, name: _channel.channelName })}
+                  onClick={() => {
+                    setChannel({ id: _channel.channelId, name: _channel.channelName });
+                  }}
                 >
                   {_channel.channelName}
                 </button>
@@ -42,31 +53,12 @@ function App() {
             ))}
           </ul>
         </ChatSidebar>
-        <ChatMessages>
+        <ChatMessagesWrapper>
           <MessagesHeader>{channel.name}</MessagesHeader>
-
-          <MessageBlock>
-            <MessageAvatar>
-              <div></div>
-              <span>Russell</span>
-            </MessageAvatar>
-            <MessageBody>
-              Hello, I'm Russell.
-              <br />
-              How can I help you today?
-            </MessageBody>
-            <MessageTimestamp>08:00</MessageTimestamp>
-          </MessageBlock>
-
-          <MessageBlock isMine>
-            <MessageTimestamp>08:00</MessageTimestamp>
-            <MessageBody>Hi, Russell I need more information about Developer Plan.</MessageBody>
-            <MessageAvatar>
-              <div></div>
-              <span>Joyce</span>
-            </MessageAvatar>
-          </MessageBlock>
-        </ChatMessages>
+          <ChatMessages>
+            <Messages channelId={channel.id} userId={userId} showOld={isOldLoaded} setOld={setIsOldLoaded} />
+          </ChatMessages>
+        </ChatMessagesWrapper>
       </ChatWindow>
     </Wrapper>
   );
@@ -150,9 +142,15 @@ const ChatSidebar = styled.div`
   }
 `;
 
-const ChatMessages = styled.div`
+const ChatMessagesWrapper = styled.div`
   grid-column: 5 / 13;
   border-left: 1px solid rgba(0, 0, 0, 0.1);
+`;
+const ChatMessages = styled.div`
+  height: 650px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
 `;
 
 const MessagesHeader = styled.h2`
@@ -160,53 +158,4 @@ const MessagesHeader = styled.h2`
   font-weight: 500;
   padding: 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-`;
-
-const MessageAvatar = styled.div`
-  color: #aaa;
-  font-size: 0.75rem;
-  text-align: center;
-
-  div {
-    width: 48px;
-    height: 48px;
-    border-radius: 48px;
-    background-color: pink;
-  }
-`;
-
-const MessageBody = styled.div`
-  background-color: #fff;
-  padding: 1rem;
-  margin: 0 1rem;
-  border-radius: 0.25rem;
-  position: relative;
-  align-self: stretch;
-  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.125);
-`;
-
-const MessageTimestamp = styled.div`
-  align-self: center;
-  font-size: 0.75rem;
-`;
-
-const MessageBlock = styled.div<MessageBlockProps>`
-  display: flex;
-  padding: 1rem;
-  align-items: flex-start;
-  justify-content: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
-
-  & ${MessageBody} {
-    text-align: ${(props) => (props.isMine ? "right" : "left")};
-  }
-  & ${MessageBody}:before {
-    content: "";
-    width: 12px;
-    height: 12px;
-    background-color: #fff;
-    position: absolute;
-    top: 18px;
-    transform: rotate(45deg);
-    ${(props) => (props.isMine ? "right" : "left")}: -6px;
-  }
 `;
