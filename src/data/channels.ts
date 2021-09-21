@@ -1,6 +1,6 @@
 const channels = [
-  {channelId: "1", channelName: "General"},
-  {channelId: "2", channelName: "Tech"},
-  {channelId: "3", channelName: "LGTM"},
+  {channelId: "1", channelName: "General Channel"},
+  {channelId: "2", channelName: "Tech Channel"},
+  {channelId: "3", channelName: "LGTM Channel"},
 ]
 export default channels;
