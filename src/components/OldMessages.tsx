@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useQuery, gql } from "@apollo/client";
-import styled from "styled-components";
 import MessageNode from "./MessageNode";
+import { StandardButton, MoreButtonWrapper, StatusMessageDiv } from "../styles/StyledElements";
 
 interface MessagesProps {
   readonly channelId: string;
@@ -34,7 +34,7 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
   return (
     <>
       <MoreButtonWrapper>
-        <MoreButton
+        <StandardButton
           onClick={() => {
             let oldMessageId =
               moreMsgQuery.data.more.length > 0
@@ -53,12 +53,20 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
           }}
         >
           Load Older Messages
-        </MoreButton>{" "}
+        </StandardButton>
         <p>
           <strong>{moreCount.current}</strong> older messages loaded
         </p>
-        <StatusMessage>{moreMsgQuery.loading && " Loading..."}</StatusMessage>
-        <StatusMessage>{moreMsgQuery.error && "message: " + moreMsgQuery.error}</StatusMessage>
+        {moreMsgQuery.loading && (
+          <StatusMessageDiv>
+            <p>Loading..."</p>
+          </StatusMessageDiv>
+        )}
+        {moreMsgQuery.error && (
+          <StatusMessageDiv>
+            <p>{moreMsgQuery.error}</p>
+          </StatusMessageDiv>
+        )}
       </MoreButtonWrapper>
       <div>
         {moreMsgQuery.data &&
@@ -70,35 +78,3 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
     </>
   );
 }
-
-const MoreButtonWrapper = styled.div`
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.55);
-
-  p {
-    padding-top: 0.25rem;
-    font-size: 0.875rem;
-    color: #aaa;
-  }
-`;
-
-const MoreButton = styled.button`
-  padding: 0.5rem 1rem;
-  color: #fff;
-  font-weight: bold;
-  background-color: lightseagreen;
-  border-radius: 0.25rem;
-  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.125);
-
-  &:hover {
-    background-color: lightskyblue;
-  }
-`;
-
-const StatusMessage = styled.div`
-  font-weight: 600;
-  margin-left: auto;
-`;

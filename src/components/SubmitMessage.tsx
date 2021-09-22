@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
+import { StandardButton, StatusMessageDiv } from "../styles/StyledElements";
 
 interface SubmitMessageProps {
   onMessageSubmit: Function;
@@ -102,8 +103,14 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
           placeholder="Type your message here..."
         />
         <br />
-        <StandardButton type="submit">Send Message</StandardButton>
-        <div>{loading && "loading..."}</div>
+        <SubmitButtonWrapper>
+          <StandardButton type="submit">Send Message</StandardButton>
+          {loading && (
+            <StatusMessageDiv>
+              <p>Sending message...</p>
+            </StatusMessageDiv>
+          )}
+        </SubmitButtonWrapper>
       </form>
     </SubmitWrapper>
   );
@@ -113,24 +120,20 @@ const SubmitWrapper = styled.div`
   padding: 1rem;
 `;
 
+const SubmitButtonWrapper = styled.div`
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+
+  p {
+    color: #666;
+  }
+`;
+
 const MessageTextarea = styled.textarea`
   width: 100%;
   height: 10ch;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.175);
-`;
-
-const StandardButton = styled.button`
-  margin: 0.5rem 0;
-  padding: 0.5rem 1rem;
-  color: #fff;
-  font-weight: bold;
-  background-color: lightseagreen;
-  border-radius: 0.25rem;
-  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.125);
-
-  &:hover {
-    background-color: lightskyblue;
-  }
+  border: 1px solid rgba(0, 0, 0, 0.125);
 `;

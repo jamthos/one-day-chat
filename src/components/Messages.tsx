@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import OldMessages from "./OldMessages";
 import SubmitMessage from "./SubmitMessage";
 import MessageNode from "./MessageNode";
+import { StandardButton, MoreButtonWrapper } from "../styles/StyledElements";
 import breakpoints from "../styles/breakpoints";
 
 interface MessagesProps {
@@ -90,10 +91,8 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
             })}
           </div>
 
-          {msgQuery.loading && <StatusMessage>Loading...</StatusMessage>}
-          {msgQuery.error && <StatusMessage>{msgQuery.error}</StatusMessage>}
-
-          {/* <StatusMessage>Loading...</StatusMessage> */}
+          {msgQuery.loading && <FloatingStatusMessage>Loading...</FloatingStatusMessage>}
+          {msgQuery.error && <FloatingStatusMessage>{msgQuery.error}</FloatingStatusMessage>}
 
           <MoreButtonWrapper>
             <StandardButton onClick={loadNewMessages}>Load New Messages</StandardButton>
@@ -111,6 +110,15 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
   );
 }
 
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
 const MessageWindow = styled.div`
   height: 60vh;
   ${breakpoints.from.sm} {
@@ -122,41 +130,18 @@ const MessageWindow = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 `;
 
-const StandardButton = styled.button`
-  padding: 0.5rem 1rem;
-  color: #fff;
+const FloatingStatusMessage = styled.div`
+  background-color: #f9ffa6;
+  color: #333;
   font-weight: bold;
-  background-color: lightseagreen;
-  border-radius: 0.25rem;
-  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.125);
-
-  &:hover {
-    background-color: lightskyblue;
-  }
-`;
-
-const MoreButtonWrapper = styled.div`
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.55);
-  p {
-    padding-top: 0.25rem;
-    font-size: 0.875rem;
-    color: #aaa;
-  }
-`;
-
-const StatusMessage = styled.div`
-  background-color: lightsteelblue;
-  color: #fff;
-  font-weight: bold;
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.125);
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
+  animation: 200ms ${fadeIn} ease-out;
+  animation-delay: 500ms;
+  animation-fill-mode: both;
 `;

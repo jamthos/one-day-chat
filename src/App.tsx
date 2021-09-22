@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import breakpoints from "./styles/breakpoints";
 import users from "./data/users";
 import channels from "./data/channels";
@@ -8,6 +8,12 @@ import Messages from "./components/Messages";
 interface OldState {
   [index: string]: boolean;
 }
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #fff;
+  }
+`;
 
 function App() {
   const [channel, setChannel] = useState({ id: channels[0].channelId, name: channels[0].channelName });
@@ -23,6 +29,7 @@ function App() {
 
   return (
     <Wrapper>
+      <GlobalStyle />
       <Header>
         <h1>1 day chat App</h1>
         <p>All messages will be deleted at every 00:00 UTC</p>
@@ -82,7 +89,6 @@ const Wrapper = styled.main`
   }
   margin: 0 auto;
   padding: 1rem;
-  min-height: 400px;
 `;
 
 const Header = styled.header`
@@ -102,7 +108,8 @@ const ChatWindow = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   background-color: #f4f5fb;
-  min-height: 400px;
+  border-radius: 0.25rem;
+  box-shadow: 0 5px 2px -3px rgba(0, 0, 0, 0.125); ;
 `;
 
 const ChatSidebar = styled.div`
