@@ -9,6 +9,16 @@ interface SubmitMessageProps {
   channelId: string;
 }
 
+interface TempMessage {
+  readonly datetime: string;
+  readonly messageId: string;
+  readonly userId: string;
+  readonly channelId: string;
+  readonly text: string;
+}
+
+let tempMessages: TempMessage[] = [];
+
 export default function SubmitMessage({ onMessageSubmit, onMessageError, userId, channelId }: SubmitMessageProps) {
   const [message, setMessage] = useState("");
 
@@ -25,10 +35,13 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
 
   const [sendMessage, { loading }] = useMutation(SEND_MESSAGE, {
     onError: (error) => {
-      console.log(error.message);
-      // onMessageError([error]);
+      console.log(error.message, tempMessages);
+      onMessageError([...tempMessages]);
     },
-    onCompleted: (data) => onMessageSubmit(),
+    onCompleted: () => {
+      tempMessages.pop();
+      onMessageSubmit();
+    },
   });
 
   return (
@@ -36,6 +49,13 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          tempMessages.push({
+            datetime: Date(),
+            text: message,
+            userId: userId,
+            channelId: channelId,
+            messageId: "temp",
+          });
           sendMessage({
             variables: {
               userId: userId,

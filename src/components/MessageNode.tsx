@@ -3,6 +3,7 @@ import styled from "styled-components";
 interface MessageNodeProps {
   readonly data: Message;
   readonly userId: string;
+  readonly hasError: boolean;
 }
 
 interface Message {
@@ -16,8 +17,13 @@ interface MessageBlockProps {
   readonly isMine?: boolean;
 }
 
-export default function MessageNode({ data, userId }: MessageNodeProps) {
+interface MessageTimestampProps {
+  readonly hasError?: boolean;
+}
+
+export default function MessageNode({ data, userId, hasError }: MessageNodeProps) {
   let msgDate = new Date(data.datetime);
+  let statusMessage = hasError ? "Error" : "Sent";
   return (
     <MessageBlock isMine={userId === data.userId ? true : false}>
       <MessageAvatar>
@@ -25,11 +31,11 @@ export default function MessageNode({ data, userId }: MessageNodeProps) {
         <span>{data.userId}</span>
       </MessageAvatar>
       <MessageBody>
-        <pre>{data.text}</pre>
+        <p>{data.text}</p>
       </MessageBody>
-      <MessageTimestamp>
+      <MessageTimestamp hasError={hasError}>
         {msgDate.toTimeString().substring(0, 5)}
-        <span>{userId === data.userId ? "Sent" : ""}</span>
+        <span>{userId === data.userId ? statusMessage : ""}</span>
       </MessageTimestamp>
     </MessageBlock>
   );
@@ -56,14 +62,18 @@ const MessageBody = styled.div`
   position: relative;
   align-self: stretch;
   box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.125);
+
+  p {
+    white-space: pre-line;
+  }
 `;
 
-const MessageTimestamp = styled.div`
+const MessageTimestamp = styled.div<MessageTimestampProps>`
   align-self: center;
   font-size: 0.75rem;
   span {
     padding-left: 0.25rem;
-    color: #aaa;
+    color: ${(props) => (props.hasError ? "red" : "#ccc")};
   }
 `;
 
@@ -71,6 +81,7 @@ const MessageBlock = styled.div<MessageBlockProps>`
   display: flex;
   padding: 1rem;
   align-items: flex-start;
+  max-width: 100%;
   flex-direction: ${(props) => (props.isMine ? "row-reverse" : "row")};
 
   & ${MessageBody} {

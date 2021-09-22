@@ -13,6 +13,14 @@ interface MessagesProps {
   readonly setOld: Function;
 }
 
+interface TempMessage {
+  readonly datetime: string;
+  readonly messageId: string;
+  readonly userId: string;
+  readonly channelId: string;
+  readonly text: string;
+}
+
 export default function Messages({ channelId, userId, showOld, setOld }: MessagesProps) {
   const [unsentMessages, setUnsentMessages] = useState([]);
   const oldMessageId = useRef(null);
@@ -31,6 +39,7 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
 
   const msgQuery = useQuery(MESSAGES, {
     variables: { channelId: channelId },
+    notifyOnNetworkStatusChange: true,
   });
 
   const loadNewMessages = function () {
@@ -46,41 +55,52 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
     <div>
       <MessageWindow>
         <div>
-          {showOld[channelId] === false && (
-            <div>
+          {showOld[channelId] === false && msgQuery.data?.msgs.length >= 10 && (
+            <MoreButtonWrapper>
               <StandardButton
                 onClick={() => {
-                  if (showOld[channelId] === false) {
-                    console.log("Load more");
-                  }
-                  if (showOld[channelId] === false) setOld({ ...showOld, [channelId]: true });
+                  setOld({ ...showOld, [channelId]: true });
                 }}
               >
                 Load Older Messages
               </StandardButton>
-            </div>
+            </MoreButtonWrapper>
           )}
           <div>
             {/* Load old messages on click */}
             {showOld[channelId] === true && (
               <OldMessages channelId={channelId} userId={userId} messageId={oldMessageId.current} showOld={showOld} />
             )}
-            {/* Show Current Messages */}
+
+            {/* Show current messages */}
             {msgQuery.data &&
               [...msgQuery.data.msgs].reverse().map((data, idx) => {
-                return <MessageNode data={data} key={data.messageId} userId={userId} />;
+                return <MessageNode data={data} key={data.messageId} userId={userId} hasError={false} />;
               })}
           </div>
-          <div>
-            <StandardButton onClick={loadNewMessages}>Load Newer Messages</StandardButton>
-          </div>
-          {/* <div>
-            {unsentMessages.map((msg) => {
-              return <pre>{JSON.stringify(msg)}</pre>;
+
+          {/* Show messages that weren't sent due to error */}
+          <div style={{ backgroundColor: "lightgoldenrodyellow" }}>
+            {unsentMessages?.map((msg: TempMessage, idx) => {
+              if (msg.channelId === channelId && msg.userId === userId) {
+                return <MessageNode data={msg} key={idx} userId={userId} hasError={true} />;
+              } else {
+                return null;
+              }
             })}
-          </div> */}
+          </div>
+
+          {msgQuery.loading && <StatusMessage>Loading...</StatusMessage>}
+          {msgQuery.error && <StatusMessage>{msgQuery.error}</StatusMessage>}
+
+          {/* <StatusMessage>Loading...</StatusMessage> */}
+
+          <MoreButtonWrapper>
+            <StandardButton onClick={loadNewMessages}>Load New Messages</StandardButton>
+          </MoreButtonWrapper>
         </div>
       </MessageWindow>
+
       <SubmitMessage
         onMessageSubmit={loadNewMessages}
         onMessageError={setUnsentMessages}
@@ -103,7 +123,6 @@ const MessageWindow = styled.div`
 `;
 
 const StandardButton = styled.button`
-  margin: 1rem;
   padding: 0.5rem 1rem;
   color: #fff;
   font-weight: bold;
@@ -114,4 +133,30 @@ const StandardButton = styled.button`
   &:hover {
     background-color: lightskyblue;
   }
+`;
+
+const MoreButtonWrapper = styled.div`
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.55);
+  p {
+    padding-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #aaa;
+  }
+`;
+
+const StatusMessage = styled.div`
+  background-color: lightsteelblue;
+  color: #fff;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.125);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
