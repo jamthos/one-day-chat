@@ -79,7 +79,7 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
 
             {/* Show current messages */}
             {msgQuery.data &&
-              [...msgQuery.data.msgs].reverse().map((data, idx) => {
+              [...msgQuery.data.msgs].reverse().map((data) => {
                 return <MessageNode data={data} key={data.messageId} userId={userId} hasError={false} />;
               })}
           </div>

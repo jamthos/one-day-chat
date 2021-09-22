@@ -38,7 +38,10 @@ export default function MessageNode({ data, userId, hasError }: MessageNodeProps
   return (
     <MessageBlock isMine={userId === data.userId ? true : false}>
       <MessageAvatar>
-        <div></div>
+        <div>
+          {/* Avatar url needs to be hooked up to user data object. Hard coded for now */}
+          <img src={"/" + data.userId + ".png"} alt={userId} />
+        </div>
         <span>{data.userId}</span>
       </MessageAvatar>
       <MessageBody>

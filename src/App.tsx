@@ -11,7 +11,7 @@ interface OldState {
 
 function App() {
   const [channel, setChannel] = useState({ id: channels[0].channelId, name: channels[0].channelName });
-  const [userId, setUserId] = useState(users[0]);
+  const [userId, setUserId] = useState(users[0].name);
   const [isOldLoaded, setIsOldLoaded] = useState(() => {
     let oldState: OldState = {};
     channels.map((channel) => {
@@ -32,8 +32,8 @@ function App() {
           <h2>1. Choose your user:</h2>
           <select name="userId" id="userId" value={userId} onChange={(e) => setUserId(e.target.value)}>
             {users.map((user) => (
-              <option value={user} key={user}>
-                {user}
+              <option value={user.name} key={user.name}>
+                {user.name}
               </option>
             ))}
           </select>
