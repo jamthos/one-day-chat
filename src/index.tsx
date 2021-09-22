@@ -36,9 +36,6 @@ const client = new ApolloClient({
           },
         },
       },
-      // Message: {
-      //   keyFields: ["messageId"],
-      // },
     },
   }),
 });

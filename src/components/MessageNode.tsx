@@ -76,7 +76,7 @@ const MessageAvatar = styled.div`
 const MessageBody = styled.div`
   background-color: #fff;
   padding: 1rem;
-  ${breakpoints.from.sm} {
+  ${breakpoints.from.md} {
     margin: 0 1rem;
   }
   border-radius: 0.25rem;
@@ -110,7 +110,7 @@ const MessageTimestamp = styled.div<MessageTimestampProps>`
 const MessageBlock = styled.div<MessageBlockProps>`
   display: flex;
   flex-direction: column;
-  ${breakpoints.from.sm} {
+  ${breakpoints.from.md} {
     flex-direction: ${(props) => (props.isMine ? "row-reverse" : "row")};
   }
   padding: 1rem;
@@ -118,7 +118,7 @@ const MessageBlock = styled.div<MessageBlockProps>`
   max-width: 100%;
 
   & ${MessageAvatar} {
-    ${breakpoints.to.sm} {
+    ${breakpoints.to.md} {
       align-self: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
       transform: translateY(-10px);
 
@@ -130,7 +130,7 @@ const MessageBlock = styled.div<MessageBlockProps>`
   }
 
   & ${MessageTimestamp} {
-    ${breakpoints.to.sm} {
+    ${breakpoints.to.md} {
       align-self: ${(props) => (props.isMine ? "flex-start" : "flex-end")};
       padding-top: 0.25rem;
     }
@@ -148,7 +148,7 @@ const MessageBlock = styled.div<MessageBlockProps>`
     position: absolute;
     top: -6px;
     ${(props) => (props.isMine ? "right" : "left")}: 10px;
-    ${breakpoints.from.sm} {
+    ${breakpoints.from.md} {
       top: 18px;
       ${(props) => (props.isMine ? "right" : "left")}: -6px;
     }

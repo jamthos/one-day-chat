@@ -33,7 +33,6 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
       } else {
         localStorage.removeItem(userId + channelId);
       }
-      console.log(messageText);
     }, 500);
   }
 

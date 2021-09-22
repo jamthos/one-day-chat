@@ -46,9 +46,9 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
 
   const loadNewMessages = function () {
     msgQuery.fetchMore({});
-    console.log(newMessageId.current);
   };
 
+  // save messageId from oldest and newest messages in order to refetch more
   if (msgQuery.data && msgQuery.data.msgs.length) newMessageId.current = msgQuery.data.msgs[0].messageId;
   if (msgQuery.data && msgQuery.data.msgs.length)
     oldMessageId.current = msgQuery.data.msgs[msgQuery.data.msgs.length - 1].messageId;
@@ -57,6 +57,8 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
     <div>
       <MessageWindow>
         <div>
+          {/* I'm not proud of this but this button loads the OldMessages component and then dissapears.
+          OldMessages has an identical button so it appears to be the same one. */}
           {showOld[channelId] === false && msgQuery.data?.msgs.length >= 10 && (
             <MoreButtonWrapper>
               <StandardButton
@@ -70,7 +72,7 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
             </MoreButtonWrapper>
           )}
           <div>
-            {/* Load old messages on click */}
+            {/* Load old messages when load more is clicked */}
             {showOld[channelId] === true && (
               <OldMessages channelId={channelId} userId={userId} messageId={oldMessageId.current} showOld={showOld} />
             )}
@@ -83,6 +85,7 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
           </div>
 
           {/* Show messages that weren't sent due to error */}
+          {/* Did not have time to finish the resend or delete functionality */}
           <div style={{ backgroundColor: "lightgoldenrodyellow" }}>
             {unsentMessages?.map((msg: TempMessage, idx) => {
               if (msg.channelId === channelId && msg.userId === userId) {

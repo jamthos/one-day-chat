@@ -29,11 +29,12 @@ export const MoreButtonWrapper = styled.div`
 `;
 
 export const StandardButton = styled.button`
-display: flex;
-align-items: center;
-gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   width: 100%;
-  ${breakpoints.from.sm}{
+  justify-content: center;
+  ${breakpoints.from.md}{
     width: auto;
   }
   padding: 0.5rem 1rem;

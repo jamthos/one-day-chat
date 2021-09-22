@@ -32,27 +32,24 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
 
   moreCount.current = moreMsgQuery.data?.more.length;
 
+  function loadOlderMessages() {
+    let oldMessageId =
+      moreMsgQuery.data.more.length > 0 ? moreMsgQuery.data.more[moreMsgQuery.data.more.length - 1].messageId : null;
+    if (oldMessageId && typeof moreMsgQuery.fetchMore !== "undefined") {
+      moreMsgQuery.fetchMore({
+        variables: {
+          messageId: oldMessageId,
+          old: true,
+          channelId: channelId,
+        },
+      });
+    }
+  }
+
   return (
     <>
       <MoreButtonWrapper>
-        <StandardButton
-          onClick={() => {
-            let oldMessageId =
-              moreMsgQuery.data.more.length > 0
-                ? moreMsgQuery.data.more[moreMsgQuery.data.more.length - 1].messageId
-                : null;
-            if (oldMessageId && typeof moreMsgQuery.fetchMore !== "undefined") {
-              console.log("Fetch more");
-              moreMsgQuery.fetchMore({
-                variables: {
-                  messageId: oldMessageId,
-                  old: true,
-                  channelId: channelId,
-                },
-              });
-            }
-          }}
-        >
+        <StandardButton onClick={loadOlderMessages}>
           Load Older Messages
           <FaArrowUp />
         </StandardButton>
@@ -73,7 +70,7 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
       <div>
         {moreMsgQuery.data &&
           showOld[channelId] === true &&
-          [...moreMsgQuery.data.more].reverse().map((data, idx) => {
+          [...moreMsgQuery.data.more].reverse().map((data) => {
             return <MessageNode data={data} key={data.messageId} userId={userId} hasError={false} />;
           })}
       </div>
