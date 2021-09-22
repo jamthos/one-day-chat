@@ -6,6 +6,7 @@ import SubmitMessage from "./SubmitMessage";
 import MessageNode from "./MessageNode";
 import { StandardButton, MoreButtonWrapper } from "../styles/StyledElements";
 import breakpoints from "../styles/breakpoints";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 interface MessagesProps {
   readonly channelId: string;
@@ -64,6 +65,7 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
                 }}
               >
                 Load Older Messages
+                <FaArrowUp />
               </StandardButton>
             </MoreButtonWrapper>
           )}
@@ -95,7 +97,10 @@ export default function Messages({ channelId, userId, showOld, setOld }: Message
           {msgQuery.error && <FloatingStatusMessage>{msgQuery.error}</FloatingStatusMessage>}
 
           <MoreButtonWrapper>
-            <StandardButton onClick={loadNewMessages}>Load New Messages</StandardButton>
+            <StandardButton onClick={loadNewMessages}>
+              Load New Messages
+              <FaArrowDown />
+            </StandardButton>
           </MoreButtonWrapper>
         </div>
       </MessageWindow>

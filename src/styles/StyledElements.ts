@@ -29,6 +29,9 @@ export const MoreButtonWrapper = styled.div`
 `;
 
 export const StandardButton = styled.button`
+display: flex;
+align-items: center;
+gap: 0.5rem;
   width: 100%;
   ${breakpoints.from.sm}{
     width: auto;

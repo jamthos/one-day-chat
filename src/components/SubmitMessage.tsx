@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 import { StandardButton, StatusMessageDiv } from "../styles/StyledElements";
+import { FaPaperPlane } from "react-icons/fa";
 
 interface SubmitMessageProps {
   onMessageSubmit: Function;
@@ -104,7 +105,10 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
         />
         <br />
         <SubmitButtonWrapper>
-          <StandardButton type="submit">Send Message</StandardButton>
+          <StandardButton type="submit">
+            Send Message
+            <FaPaperPlane />
+          </StandardButton>
           {loading && (
             <StatusMessageDiv>
               <p>Sending message...</p>

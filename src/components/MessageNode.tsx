@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import breakpoints from "../styles/breakpoints";
+import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 
 interface MessageNodeProps {
   readonly data: Message;
@@ -24,7 +25,16 @@ interface MessageTimestampProps {
 
 export default function MessageNode({ data, userId, hasError }: MessageNodeProps) {
   let msgDate = new Date(data.datetime);
-  let statusMessage = hasError ? "Error" : "Sent";
+  let statusMessage = hasError ? (
+    <span>
+      <FaExclamationCircle style={{ fill: "red" }} /> Error
+    </span>
+  ) : (
+    <span>
+      <FaCheckCircle style={{ fill: "green" }} /> Sent
+    </span>
+  );
+
   return (
     <MessageBlock isMine={userId === data.userId ? true : false}>
       <MessageAvatar>
@@ -35,6 +45,12 @@ export default function MessageNode({ data, userId, hasError }: MessageNodeProps
         <p>{data.text}</p>
       </MessageBody>
       <MessageTimestamp hasError={hasError}>
+        {hasError && (
+          <span style={{ paddingRight: "4px" }}>
+            <button onClick={() => console.log("Resend message")}>Resend</button>
+            <button onClick={() => console.log("Delete message")}>Delete</button>
+          </span>
+        )}
         {msgDate.toTimeString().substring(0, 5)}
         <span>{userId === data.userId ? statusMessage : ""}</span>
       </MessageTimestamp>
@@ -76,9 +92,18 @@ const MessageBody = styled.div`
 const MessageTimestamp = styled.div<MessageTimestampProps>`
   align-self: center;
   font-size: 0.75rem;
+  display: flex;
+
   span {
     padding-left: 0.25rem;
-    color: ${(props) => (props.hasError ? "red" : "#ccc")};
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: ${(props) => (props.hasError ? "red" : "#aaa")};
+
+    svg {
+      display: inline;
+    }
   }
 `;
 

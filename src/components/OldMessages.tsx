@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useQuery, gql } from "@apollo/client";
 import MessageNode from "./MessageNode";
 import { StandardButton, MoreButtonWrapper, StatusMessageDiv } from "../styles/StyledElements";
+import { FaArrowUp } from "react-icons/fa";
 
 interface MessagesProps {
   readonly channelId: string;
@@ -53,6 +54,7 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
           }}
         >
           Load Older Messages
+          <FaArrowUp />
         </StandardButton>
         <p>
           <strong>{moreCount.current}</strong> older messages loaded
