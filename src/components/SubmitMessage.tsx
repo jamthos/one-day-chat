@@ -53,6 +53,7 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
     },
     onCompleted: () => {
       tempMessages.pop();
+      localStorage.removeItem(userId + channelId);
       onMessageSubmit();
     },
   });
