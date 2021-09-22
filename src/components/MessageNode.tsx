@@ -73,6 +73,11 @@ const MessageAvatar = styled.div`
     height: 48px;
     border-radius: 48px;
     background-color: pink;
+
+    ${breakpoints.to.sm} {
+      width: 32px;
+      height: 32px;
+    }
   }
 `;
 
@@ -121,19 +126,14 @@ const MessageBlock = styled.div<MessageBlockProps>`
   max-width: 100%;
 
   & ${MessageAvatar} {
-    ${breakpoints.to.md} {
+    ${breakpoints.to.sm} {
       align-self: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
       transform: translateY(-10px);
-
-      div {
-        width: 32px;
-        height: 32px;
-      }
     }
   }
 
   & ${MessageTimestamp} {
-    ${breakpoints.to.md} {
+    ${breakpoints.to.sm} {
       align-self: ${(props) => (props.isMine ? "flex-start" : "flex-end")};
       padding-top: 0.25rem;
     }
