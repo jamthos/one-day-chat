@@ -26,12 +26,13 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
 
   const moreMsgQuery = useQuery(MORE_MESSAGES, {
     variables: { channelId: channelId, old: true, messageId: messageId },
+    notifyOnNetworkStatusChange: true,
   });
 
   moreCount.current = moreMsgQuery.data?.more.length;
 
   return (
-    <div>
+    <>
       <MoreButtonWrapper>
         <MoreButton
           onClick={() => {
@@ -56,22 +57,26 @@ export default function OldMessages({ channelId, userId, messageId, showOld }: M
         <p>
           <strong>{moreCount.current}</strong> older messages loaded
         </p>
-        {moreMsgQuery.loading && " Loading..."}
-        {moreMsgQuery.error && "message: " + moreMsgQuery.error}
+        <StatusMessage>{moreMsgQuery.loading && " Loading..."}</StatusMessage>
+        <StatusMessage>{moreMsgQuery.error && "message: " + moreMsgQuery.error}</StatusMessage>
       </MoreButtonWrapper>
       <div>
         {moreMsgQuery.data &&
           showOld[channelId] === true &&
           [...moreMsgQuery.data.more].reverse().map((data, idx) => {
-            return <MessageNode data={data} key={data.messageId} userId={userId} />;
+            return <MessageNode data={data} key={data.messageId} userId={userId} hasError={false} />;
           })}
       </div>
-    </div>
+    </>
   );
 }
 
 const MoreButtonWrapper = styled.div`
-  margin: 1rem 1rem 0;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.55);
 
   p {
     padding-top: 0.25rem;
@@ -91,4 +96,9 @@ const MoreButton = styled.button`
   &:hover {
     background-color: lightskyblue;
   }
+`;
+
+const StatusMessage = styled.div`
+  font-weight: 600;
+  margin-left: auto;
 `;
