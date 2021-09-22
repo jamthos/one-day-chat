@@ -1,4 +1,5 @@
 import styled, {keyframes} from "styled-components";
+import breakpoints from "./breakpoints";
 
 const fadeIn = keyframes`
   0% {
@@ -28,6 +29,10 @@ export const MoreButtonWrapper = styled.div`
 `;
 
 export const StandardButton = styled.button`
+  width: 100%;
+  ${breakpoints.from.sm}{
+    width: auto;
+  }
   padding: 0.5rem 1rem;
   color: #fff;
   font-weight: bold;

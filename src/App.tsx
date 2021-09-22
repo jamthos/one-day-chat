@@ -169,5 +169,9 @@ const MessagesHeader = styled.h2`
   font-size: 1.175rem;
   font-weight: 500;
   padding: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  ${breakpoints.from.sm} {
+    border-top: none;
+  }
 `;

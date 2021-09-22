@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import breakpoints from "../styles/breakpoints";
 
 interface MessageNodeProps {
   readonly data: Message;
@@ -44,7 +45,9 @@ export default function MessageNode({ data, userId, hasError }: MessageNodeProps
 const MessageAvatar = styled.div`
   color: #aaa;
   font-size: 0.75rem;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   div {
     width: 48px;
@@ -57,7 +60,9 @@ const MessageAvatar = styled.div`
 const MessageBody = styled.div`
   background-color: #fff;
   padding: 1rem;
-  margin: 0 1rem;
+  ${breakpoints.from.sm} {
+    margin: 0 1rem;
+  }
   border-radius: 0.25rem;
   position: relative;
   align-self: stretch;
@@ -79,22 +84,49 @@ const MessageTimestamp = styled.div<MessageTimestampProps>`
 
 const MessageBlock = styled.div<MessageBlockProps>`
   display: flex;
+  flex-direction: column;
+  ${breakpoints.from.sm} {
+    flex-direction: ${(props) => (props.isMine ? "row-reverse" : "row")};
+  }
   padding: 1rem;
   align-items: flex-start;
   max-width: 100%;
-  flex-direction: ${(props) => (props.isMine ? "row-reverse" : "row")};
+
+  & ${MessageAvatar} {
+    ${breakpoints.to.sm} {
+      align-self: ${(props) => (props.isMine ? "flex-end" : "flex-start")};
+      transform: translateY(-10px);
+
+      div {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  }
+
+  & ${MessageTimestamp} {
+    ${breakpoints.to.sm} {
+      align-self: ${(props) => (props.isMine ? "flex-start" : "flex-end")};
+      padding-top: 0.25rem;
+    }
+  }
 
   & ${MessageBody} {
     text-align: ${(props) => (props.isMine ? "right" : "left")};
   }
+
   & ${MessageBody}:before {
     content: "";
     width: 12px;
     height: 12px;
     background-color: #fff;
     position: absolute;
-    top: 18px;
+    top: -6px;
+    ${(props) => (props.isMine ? "right" : "left")}: 10px;
+    ${breakpoints.from.sm} {
+      top: 18px;
+      ${(props) => (props.isMine ? "right" : "left")}: -6px;
+    }
     transform: rotate(45deg);
-    ${(props) => (props.isMine ? "right" : "left")}: -6px;
   }
 `;
