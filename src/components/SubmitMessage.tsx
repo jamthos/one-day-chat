@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
 import styled from "styled-components";
 
@@ -14,13 +14,26 @@ interface TempMessage {
   readonly messageId: string;
   readonly userId: string;
   readonly channelId: string;
-  readonly text: string;
+  readonly text: string | null;
 }
 
 let tempMessages: TempMessage[] = [];
 
 export default function SubmitMessage({ onMessageSubmit, onMessageError, userId, channelId }: SubmitMessageProps) {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
+  const timeOutRef = useRef<number | null>(null);
+
+  function saveLocalMessage(messageText: string) {
+    if (timeOutRef.current) clearTimeout(timeOutRef.current);
+    timeOutRef.current = window.setTimeout(() => {
+      if (messageText !== "") {
+        localStorage.setItem(userId + channelId, messageText);
+      } else {
+        localStorage.removeItem(userId + channelId);
+      }
+      console.log(messageText);
+    }, 500);
+  }
 
   const SEND_MESSAGE = gql`
     mutation newMessage($channelId: String!, $userId: String!, $text: String!) {
@@ -35,7 +48,7 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
 
   const [sendMessage, { loading }] = useMutation(SEND_MESSAGE, {
     onError: (error) => {
-      console.log(error.message, tempMessages);
+      console.error(error.message);
       onMessageError([...tempMessages]);
     },
     onCompleted: () => {
@@ -43,6 +56,15 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
       onMessageSubmit();
     },
   });
+
+  useEffect(() => {
+    if (localStorage.getItem(userId + channelId)) {
+      let savedMessage = localStorage.getItem(userId + channelId);
+      setMessage(savedMessage || "");
+    } else {
+      setMessage("");
+    }
+  }, [channelId, userId]);
 
   return (
     <SubmitWrapper>
@@ -70,7 +92,10 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
         <MessageTextarea
           name="newMessage"
           id="newMessage"
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            setMessage(e.target.value);
+            saveLocalMessage(e.target.value);
+          }}
           value={message}
           placeholder="Type your message here..."
         />
