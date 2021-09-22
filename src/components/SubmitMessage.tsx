@@ -54,6 +54,7 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
     onCompleted: () => {
       tempMessages.pop();
       localStorage.removeItem(userId + channelId);
+      setMessage("");
       onMessageSubmit();
     },
   });
@@ -86,8 +87,6 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
               text: message,
             },
           });
-          // console.log("Sent Message", message);
-          setMessage("");
         }}
       >
         <MessageTextarea
