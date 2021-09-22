@@ -73,20 +73,22 @@ export default function SubmitMessage({ onMessageSubmit, onMessageError, userId,
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          tempMessages.push({
-            datetime: Date(),
-            text: message,
-            userId: userId,
-            channelId: channelId,
-            messageId: "temp",
-          });
-          sendMessage({
-            variables: {
+          if (message !== "") {
+            tempMessages.push({
+              datetime: Date(),
+              text: message,
               userId: userId,
               channelId: channelId,
-              text: message,
-            },
-          });
+              messageId: "temp",
+            });
+            sendMessage({
+              variables: {
+                userId: userId,
+                channelId: channelId,
+                text: message,
+              },
+            });
+          }
         }}
       >
         <MessageTextarea
